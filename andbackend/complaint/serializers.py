@@ -14,14 +14,14 @@ class ComplaintListSerializer(serializers.ModelSerializer):
 class ComplaintDetailSerializer(serializers.ModelSerializer):
     reporter = serializers.Field('reporter.username')
     category = serializers.Field('category.name')
+    images = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Complaint
         fields = ('id', 'address', 'city', 'longtitude', 'latitude', 'downvote',
-                  'upvote', 'image', 'category', 'reporter', 'date', 'title')
+                  'upvote', 'images', 'category', 'reporter', 'date', 'title')
 
 class CategoryListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'icon')

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    icon = models.ImageField(upload_to='/srv/android/andbackend/static/icons')
+    icon = models.TextField()
 
     def __unicode__(self):
         return u'(%d) %s' % (self.id, self.name)
@@ -15,7 +15,6 @@ class Complaint(models.Model):
     date = models.DateField()
     reporter = models.ForeignKey(User)
     category = models.ForeignKey(Category)
-    image = models.ImageField(upload_to='/srv/android/andbackend/static/img')
 
     upvote = models.IntegerField()
     downvote = models.IntegerField()
@@ -31,3 +30,9 @@ class Complaint(models.Model):
 
     def pre_save(self, obj):
         obj.reporter = self.request.user
+
+
+class Image(models.Model):
+    uploader = models.ForeignKey(User)
+    complaint = models.ForeignKey(Complaint)
+    image = models.TextField()
