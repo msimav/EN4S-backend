@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
-    icon = models.TextField()
+    icon = models.CharField(max_length=32)
 
     def __unicode__(self):
         return u'(%d) %s' % (self.id, self.name)
