@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     # From rest_framework tutorial
     url(r'^api/category/$', views.CategoryListView.as_view()),
     url(r'^api/complaint/$', views.ComplaintListView.as_view()),
-    url(r'^api/complaint/(?P<pk>[0-9]+)/$', views.CategoryListView.as_view()),
+    url(r'^api/complaint/(?P<pk>[0-9]+)/$', views.ComplaintDetailView.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
 
