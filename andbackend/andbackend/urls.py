@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^api/complaint/new/$', views.ComplaintListView.as_view(), kwargs={'sorting': 'new'}),
     url(r'^api/complaint/(?P<pk>[0-9]+)/$', views.ComplaintDetailView.as_view()),
     url(r'^api/image/(?P<pk>[0-9]+)/$', views.ImageView.as_view()),
+    url(r'^api/nearest/$', views.nearest_complaint),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
 

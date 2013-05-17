@@ -1,12 +1,16 @@
 from django.http import Http404
 from rest_framework import generics, mixins
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from complaint.models import Category, Complaint, Image
 
 from complaint.serializers import CategoryListSerializer
 from complaint.serializers import ComplaintSerializer
 from complaint.serializers import ImageSerializer
+
+import math
+from decimal import Decimal
 
 # Create your views here.
 
@@ -92,3 +96,21 @@ class ImageView(generics.GenericAPIView):
 
     def pre_save(self, obj):
         obj.uploader = self.request.user
+
+
+@api_view(['GET'])
+def nearest_complaint(request):
+    lat = Decimal(request.GET['latitude'])
+    lon = Decimal(request.GET['longitude'])
+    complaint = Complaint.objects.all()
+
+    def delta(elem):
+        return math.sqrt((lat - elem.latitude) ** 2 + (lon - elem.longtitude) ** 2)
+
+    nearest = complaint[0]
+    for i in complaint:
+        if delta(i) < delta(nearest):
+            nearest = i
+
+    serializer = ComplaintSerializer(nearest)
+    return Response(serializer.data)
