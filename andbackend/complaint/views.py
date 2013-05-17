@@ -16,19 +16,37 @@ class CategoryListView(generics.ListAPIView):
     serializer_class = CategoryListSerializer
 
 
-class ComplaintListView(generics.ListCreateAPIView):
+class ComplaintListView(mixins.CreateModelMixin,
+                  generics.GenericAPIView):
 
+    queryset = Complaint.objects.all()
     serializer_class = ComplaintSerializer
 
-    def get_queryset(self):
-        if 'sorting' in self.kwargs:
-            if self.kwargs['sorting'] == 'hot':
-                return Complaint.objects.order_by('-upvote')
-            if self.kwargs['sorting'] == 'new':
-                return Complaint.objects.order_by('-id')
+    def get(self, request, sorting=None, format=None):
+        if 'cat' in request.GET:
+            cat = request.GET["cat"].lower().capitalize()
         else:
-            return Complaint.objects.all()
+            cat = None
 
+        if sorting:
+            if sorting == 'hot':
+                if cat:
+                    qs = Complaint.objects.filter(category__name=cat).order_by('-upvote')
+                else:
+                    qs = Complaint.objects.order_by('-upvote')
+            if sorting == 'new':
+                if cat:
+                    qs = Complaint.objects.filter(category__name=cat).order_by('-id')
+                else:
+                    qs = Complaint.objects.order_by('-id')
+        else:
+            qs = Complaint.objects.all()
+
+        serializer = ComplaintSerializer(qs, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class ComplaintDetailView(generics.RetrieveUpdateDestroyAPIView):
