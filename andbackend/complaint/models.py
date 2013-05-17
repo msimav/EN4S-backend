@@ -12,9 +12,9 @@ class Category(models.Model):
 
 class Complaint(models.Model):
     title = models.CharField(max_length=120)
-    date = models.DateField()
-    reporter = models.ForeignKey(User)
-    category = models.ForeignKey(Category)
+    date = models.DateTimeField()
+    reporter = models.ForeignKey(User, related_name='reporter')
+    category = models.ForeignKey(Category, related_name='category')
 
     upvote = models.IntegerField()
     downvote = models.IntegerField()
@@ -28,11 +28,10 @@ class Complaint(models.Model):
     def __unicode__(self):
         return self.title
 
-    def pre_save(self, obj):
-        obj.reporter = self.request.user
-
-
 class Image(models.Model):
     uploader = models.ForeignKey(User)
     complaint = models.ForeignKey(Complaint)
     image = models.TextField()
+
+    def __unicode__(self):
+        return '%s (%s)' % (complaint.title, uploader.username)

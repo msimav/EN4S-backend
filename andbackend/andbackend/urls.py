@@ -21,7 +21,10 @@ urlpatterns = patterns('',
     # From rest_framework tutorial
     url(r'^api/category/$', views.CategoryListView.as_view()),
     url(r'^api/complaint/$', views.ComplaintListView.as_view()),
+    url(r'^api/complaint/hot/$', views.ComplaintListView.as_view(), kwargs={'sorting': 'hot'}),
+    url(r'^api/complaint/new/$', views.ComplaintListView.as_view(), kwargs={'sorting': 'new'}),
     url(r'^api/complaint/(?P<pk>[0-9]+)/$', views.ComplaintDetailView.as_view()),
+    url(r'^api/image/(?P<pk>[0-9]+)/$', views.ImageView.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 )
 
